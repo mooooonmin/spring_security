@@ -27,6 +27,7 @@ public class FormUserDetailsService implements UserDetailsService {
         Account account = userRepository.findByUsername(username);
         if (account == null) {
             throw new UsernameNotFoundException("No user found with username: " + username);
+
         }
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(account.getRoles()));
         ModelMapper mapper = new ModelMapper();
