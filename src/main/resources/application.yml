@@ -1,4 +1,3 @@
-#FIXME
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/springboot
@@ -14,5 +13,6 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+
   thymeleaf:
     cache: false
