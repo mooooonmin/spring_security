@@ -26,8 +26,10 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
         String loginId = authentication.getName();
         String password = (String) authentication.getCredentials();
 
+        // 사용자 ID 확인
         AccountContext accountContext = (AccountContext)userDetailsService.loadUserByUsername(loginId);
 
+        // 비밀번호가 맞는지 확인
         if (!passwordEncoder.matches(password, accountContext.getPassword())) {
             throw new BadCredentialsException("Invalid password");
         }
@@ -37,6 +39,7 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
             throw new SecretException("Invalid Secret");
         }
 
+        // Authentication의 principal 속성에는 AccountContext에 있는 AccountDto를 설정한다
         return new UsernamePasswordAuthenticationToken(accountContext.getAccountDto(), null, accountContext.getAuthorities());
     }
 
@@ -44,4 +47,5 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return authentication.isAssignableFrom(UsernamePasswordAuthenticationToken.class);
     }
+
 }

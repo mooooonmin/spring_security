@@ -25,13 +25,18 @@ public class FormUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Account account = userRepository.findByUsername(username);
+
         if (account == null) {
             throw new UsernameNotFoundException("No user found with username: " + username);
         }
+
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(account.getRoles()));
         ModelMapper mapper = new ModelMapper();
         AccountDto accountDto = mapper.map(account, AccountDto.class);
 
+        // AccountContext -> UserDetails을 구현한 클래스로서 AccountDto를 wrapping 함
         return new AccountContext(accountDto, authorities);
+
     }
+
 }
