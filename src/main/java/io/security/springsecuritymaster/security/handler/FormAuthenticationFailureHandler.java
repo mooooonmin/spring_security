@@ -36,7 +36,7 @@ public class FormAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
 
         setDefaultFailureUrl("/login?error=true&exception=" + errorMessage);
 
-        super.onAuthenticationFailure(request,response,exception);
+        super.onAuthenticationFailure(request, response, exception);
 
     }
 }
