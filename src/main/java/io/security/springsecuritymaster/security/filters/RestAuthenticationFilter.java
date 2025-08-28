@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.security.springsecuritymaster.domain.dto.AccountDto;
 import io.security.springsecuritymaster.security.token.RestAuthenticationToken;
 import io.security.springsecuritymaster.util.WebUtil;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -39,5 +41,4 @@ public class RestAuthenticationFilter extends AbstractAuthenticationProcessingFi
 
         return this.getAuthenticationManager().authenticate(token);
     }
-
 }
