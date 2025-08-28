@@ -87,4 +87,5 @@ public class ResourcesController {
 
 		return "redirect:/admin/resources";
 	}
+
 }

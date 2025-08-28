@@ -13,24 +13,31 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * 비동기 인증 성공 핸들러
+ */
 @Component("successHandler")
 public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
     private final RequestCache requestCache = new HttpSessionRequestCache();
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Override
-    public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(final HttpServletRequest request,
+                                        final HttpServletResponse response,
+                                        final Authentication authentication) throws IOException {
 
         setDefaultTargetUrl("/");
 
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
-        if(savedRequest!=null) {
+        if(savedRequest! = null) {
             String targetUrl = savedRequest.getRedirectUrl();
             redirectStrategy.sendRedirect(request, response, targetUrl);
-        }
-        else {
+        } else {
             redirectStrategy.sendRedirect(request, response, getDefaultTargetUrl());
         }
+
     }
+
 }

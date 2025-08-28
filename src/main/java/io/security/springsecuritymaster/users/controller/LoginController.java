@@ -15,12 +15,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LoginController {
+
     @GetMapping(value="/login")
     public String login(@RequestParam(value = "error", required = false) String error,
                         @RequestParam(value = "exception", required = false) String exception, Model model){
+
         model.addAttribute("error",error);
         model.addAttribute("exception",exception);
+
         return "login/login";
+
     }
 
     @GetMapping(value="/api/login")
@@ -35,7 +39,9 @@ public class LoginController {
 
     @GetMapping(value = "/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
+
         Authentication authentication = SecurityContextHolder.getContextHolderStrategy().getContext().getAuthentication();
+
         if (authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
@@ -44,11 +50,14 @@ public class LoginController {
     }
 
     @GetMapping(value="/denied")
-    public String accessDenied(@RequestParam(value = "exception", required = false) String exception, @AuthenticationPrincipal AccountDto accountDto, Model model) {
+    public String accessDenied(@RequestParam(value = "exception", required = false) String exception,
+                               @AuthenticationPrincipal AccountDto accountDto, Model model) {
 
         model.addAttribute("username", accountDto.getUsername());
         model.addAttribute("exception", exception);
 
         return "login/denied";
+
     }
+
 }

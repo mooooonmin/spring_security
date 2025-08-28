@@ -7,6 +7,7 @@ import java.util.Map;
 public class MapBasedUrlRoleMapper implements UrlRoleMapper{
 
     private final LinkedHashMap<String, String> urlRoleMappings = new LinkedHashMap<>();
+
     @Override
     public Map<String, String> getUrlRoleMappings() {
 
@@ -26,5 +27,7 @@ public class MapBasedUrlRoleMapper implements UrlRoleMapper{
         urlRoleMappings.put("/db", "hasRole('DBA')");
 
         return new HashMap<>(urlRoleMappings);
+
     }
+
 }

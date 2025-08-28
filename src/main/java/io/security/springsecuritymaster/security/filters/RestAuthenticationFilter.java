@@ -22,18 +22,22 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 
 public class RestAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public RestAuthenticationFilter() {
-        super(new AntPathRequestMatcher("/api/login", "POST"));
+        super(new AntPathRequestMatcher("/api/login", "POST")); // 필터가 작동하기 위한 조건 -> Url,POST
     }
 
     public SecurityContextRepository getSecurityContextRepository(HttpSecurity http) {
+
         SecurityContextRepository securityContextRepository = http.getSharedObject(SecurityContextRepository.class);
+
         if (securityContextRepository == null) {
             securityContextRepository = new DelegatingSecurityContextRepository(
                     new RequestAttributeSecurityContextRepository(), new HttpSessionSecurityContextRepository());
         }
+
         return securityContextRepository;
     }
 
@@ -41,6 +45,7 @@ public class RestAuthenticationFilter extends AbstractAuthenticationProcessingFi
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException {
 
+        // POST 요청이더라도, Ajax 요청인지 아닌지 한번 더 확인
         if (!HttpMethod.POST.name().equals(request.getMethod()) || !WebUtil.isAjax(request)) {
             throw new IllegalArgumentException("Authentication method not supported");
         }
@@ -50,10 +55,10 @@ public class RestAuthenticationFilter extends AbstractAuthenticationProcessingFi
         if (!StringUtils.hasText(accountDto.getUsername()) || !StringUtils.hasText(accountDto.getPassword())) {
             throw new AuthenticationServiceException("Username or Password not provided");
         }
+
         RestAuthenticationToken token = new RestAuthenticationToken(accountDto.getUsername(),accountDto.getPassword());
 
         return this.getAuthenticationManager().authenticate(token);
     }
-
 
 }

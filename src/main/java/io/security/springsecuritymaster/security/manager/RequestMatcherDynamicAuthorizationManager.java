@@ -25,8 +25,9 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class RequestMatcherDynamicAuthorizationManager implements AuthorizationManager<HttpServletRequest> {
+
     List<RequestMatcherEntry<AuthorizationManager<RequestAuthorizationContext>>> mappings;
-//    private static final AuthorizationDecision DENY = new AuthorizationDecision(false);
+    //private static final AuthorizationDecision DENY = new AuthorizationDecision(false);
     private static final AuthorizationDecision ACCESS = new AuthorizationDecision(true);
     private final HandlerMappingIntrospector handlerMappingIntrospector;
     private final ResourcesRepository resourcesRepository;
@@ -44,6 +45,7 @@ public class RequestMatcherDynamicAuthorizationManager implements AuthorizationM
                         customAuthorizationManager(entry.getValue())))
                 .collect(Collectors.toList());
     }
+
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, HttpServletRequest request) {
 
@@ -57,7 +59,9 @@ public class RequestMatcherDynamicAuthorizationManager implements AuthorizationM
                 return manager.check(authentication,
                         new RequestAuthorizationContext(request, matchResult.getVariables()));
             }
+
         }
+
         return ACCESS;
     }
 
@@ -67,10 +71,13 @@ public class RequestMatcherDynamicAuthorizationManager implements AuthorizationM
     }
 
     private AuthorizationManager<RequestAuthorizationContext> customAuthorizationManager(String role) {
+
         if (role.startsWith("ROLE")) {
             return AuthorityAuthorizationManager.hasAuthority(role);
-        }else{
+        } else{
             return new WebExpressionAuthorizationManager(role);
         }
+
     }
+
 }

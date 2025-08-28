@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleDto{
+public class RoleDto {
+
     private String id;
     private String roleName;
     private String roleDesc;
     private String isExpression;
+
 }

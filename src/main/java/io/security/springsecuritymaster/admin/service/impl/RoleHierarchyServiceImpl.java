@@ -12,6 +12,7 @@ import java.util.List;
 
 @Service
 public class RoleHierarchyServiceImpl implements RoleHierarchyService {
+
     private RoleHierarchyRepository roleHierarchyRepository;
 
     @Autowired
@@ -29,14 +30,18 @@ public class RoleHierarchyServiceImpl implements RoleHierarchyService {
         StringBuilder hierarchyRole = new StringBuilder();
 
         while (itr.hasNext()) {
+
             RoleHierarchy roleHierarchy = itr.next();
+
             if (roleHierarchy.getParent() != null) {
                 hierarchyRole.append(roleHierarchy.getParent().getRoleName());
                 hierarchyRole.append(" > ");
                 hierarchyRole.append(roleHierarchy.getRoleName());
                 hierarchyRole.append("\n");
             }
+
         }
+
         return hierarchyRole.toString();
     }
 }

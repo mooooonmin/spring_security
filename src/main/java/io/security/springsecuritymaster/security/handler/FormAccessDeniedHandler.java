@@ -11,6 +11,7 @@ import java.io.IOException;
 
 
 public class FormAccessDeniedHandler implements AccessDeniedHandler {
+
 	private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 	private final String errorPage;
 
@@ -19,10 +20,13 @@ public class FormAccessDeniedHandler implements AccessDeniedHandler {
 	}
 
 	@Override
-	public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
+	public void handle(HttpServletRequest request,
+                       HttpServletResponse response,
+                       AccessDeniedException accessDeniedException) throws IOException {
 
 		String deniedUrl = errorPage + "?exception=" + accessDeniedException.getMessage();
 		redirectStrategy.sendRedirect(request, response, deniedUrl);
 
 	}
+
 }

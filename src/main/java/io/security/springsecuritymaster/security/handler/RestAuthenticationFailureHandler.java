@@ -14,18 +14,21 @@ import java.io.IOException;
 
 @Component("restFailureHandler")
 public class RestAuthenticationFailureHandler implements AuthenticationFailureHandler {
+
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
+    public void onAuthenticationFailure(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        AuthenticationException exception) throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
-
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         if (exception instanceof BadCredentialsException) {
             mapper.writeValue(response.getWriter(), "Invalid username or password");
-
         }
+
         mapper.writeValue(response.getWriter(), "Authentication failed");
     }
+
 }

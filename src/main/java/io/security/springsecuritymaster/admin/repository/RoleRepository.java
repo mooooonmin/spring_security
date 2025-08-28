@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
+
     Role findByRoleName(String name);
 
     @Override
@@ -14,4 +15,5 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
     @Query("select r from Role r where r.isExpression = 'N'")
     List<Role> findAllRolesWithoutExpression();
+
 }

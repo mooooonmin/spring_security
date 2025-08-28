@@ -22,26 +22,25 @@ import java.util.function.Supplier;
 @Getter
 @Setter
 public class CustomAuthorizationFilter extends GenericFilterBean implements InitializingBean {
+
     private SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
             .getContextHolderStrategy();
 
     private final AuthorizationManager<HttpServletRequest> authorizationManager;
-
     private AuthorizationEventPublisher eventPublisher = CustomAuthorizationFilter::noPublish;
-
     private boolean observeOncePerRequest = false;
-
     private boolean filterErrorDispatch = true;
-
     private boolean filterAsyncDispatch = true;
 
     public CustomAuthorizationFilter(AuthorizationManager<HttpServletRequest> authorizationManager) {
         Assert.notNull(authorizationManager, "authorizationManager cannot be null");
         this.authorizationManager = authorizationManager;
     }
+
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
-            throws ServletException, IOException {
+    public void doFilter(ServletRequest servletRequest,
+                         ServletResponse servletResponse,
+                         FilterChain chain) throws ServletException, IOException {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
@@ -62,23 +61,28 @@ public class CustomAuthorizationFilter extends GenericFilterBean implements Init
         try {
             AuthorizationDecision decision = this.authorizationManager.check(this::getAuthentication, request);
             this.eventPublisher.publishAuthorizationEvent(this::getAuthentication, request, decision);
+
             if (decision != null && !decision.isGranted()) {
                 throw new AccessDeniedException("Access Denied");
             }
+
             chain.doFilter(request, response);
-        }
-        finally {
+
+        } finally {
             request.removeAttribute(alreadyFilteredAttributeName);
         }
     }
 
     private boolean skipDispatch(HttpServletRequest request) {
+
         if (DispatcherType.ERROR.equals(request.getDispatcherType()) && !this.filterErrorDispatch) {
             return true;
         }
+
         if (DispatcherType.ASYNC.equals(request.getDispatcherType()) && !this.filterAsyncDispatch) {
             return true;
         }
+
         return false;
     }
 
@@ -87,10 +91,13 @@ public class CustomAuthorizationFilter extends GenericFilterBean implements Init
     }
 
     private String getAlreadyFilteredAttributeName() {
+
         String name = getFilterName();
+
         if (name == null) {
             name = getClass().getName();
         }
+
         return name + ".APPLIED";
     }
 
@@ -100,11 +107,14 @@ public class CustomAuthorizationFilter extends GenericFilterBean implements Init
     }
 
     private Authentication getAuthentication() {
+
         Authentication authentication = this.securityContextHolderStrategy.getContext().getAuthentication();
+
         if (authentication == null) {
             throw new AuthenticationCredentialsNotFoundException(
                     "An Authentication object was not found in the SecurityContext");
         }
+
         return authentication;
     }
 
@@ -113,9 +123,8 @@ public class CustomAuthorizationFilter extends GenericFilterBean implements Init
         this.eventPublisher = eventPublisher;
     }
 
-
     private static <T> void noPublish(Supplier<Authentication> authentication, T object,
                                       AuthorizationDecision decision) {
-
     }
+
 }

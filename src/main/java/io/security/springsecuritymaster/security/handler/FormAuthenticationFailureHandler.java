@@ -13,24 +13,26 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * 비동기 인증 실패 핸들러
+ */
 @Component("failureHandler")
 public class FormAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Override
-    public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException exception) throws IOException, ServletException {
+    public void onAuthenticationFailure(final HttpServletRequest request,
+                                        final HttpServletResponse response,
+                                        final AuthenticationException exception) throws IOException, ServletException {
 
         String errorMessage = "Invalid Username or Password";
 
         if(exception instanceof BadCredentialsException) {
             errorMessage = "Invalid Username or Password";
-        }
-        else if(exception instanceof UsernameNotFoundException) {
+        } else if(exception instanceof UsernameNotFoundException) {
             errorMessage = "User not exists";
-        }
-        else if(exception instanceof CredentialsExpiredException) {
+        } else if(exception instanceof CredentialsExpiredException) {
             errorMessage = "Expired password";
-
-        }else if(exception instanceof SecretException) {
+        } else if(exception instanceof SecretException) {
             errorMessage = "Invalid Secret key";
         }
 
@@ -39,4 +41,5 @@ public class FormAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
         super.onAuthenticationFailure(request, response, exception);
 
     }
+
 }

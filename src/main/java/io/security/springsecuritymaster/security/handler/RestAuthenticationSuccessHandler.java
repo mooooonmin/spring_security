@@ -17,8 +17,11 @@ import java.io.IOException;
 
 @Component("restSuccessHandler")
 public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication) throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -30,11 +33,16 @@ public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHa
 
         clearAuthenticationAttributes(request);
     }
+
     protected final void clearAuthenticationAttributes(HttpServletRequest request) {
+
         HttpSession session = request.getSession(false);
+
         if (session == null) {
             return;
         }
+
         session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
     }
+
 }

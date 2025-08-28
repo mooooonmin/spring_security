@@ -17,8 +17,10 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class UserManagementController {
+
 	private final UserManagementService userManagementService;
 	private final RoleService roleService;
+
 	@GetMapping(value="/admin/users")
 	public String getUsers(Model model) {
 
@@ -55,4 +57,5 @@ public class UserManagementController {
 
 		return "redirect:admin/users";
 	}
+
 }

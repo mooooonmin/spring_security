@@ -14,12 +14,16 @@ import java.io.IOException;
 public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
 	private final ObjectMapper mapper = new ObjectMapper();
+
 	@Override
-	public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
+	public void handle(HttpServletRequest request,
+                       HttpServletResponse response,
+                       AccessDeniedException accessDeniedException) throws IOException {
 
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		response.setStatus(HttpStatus.FORBIDDEN.value());
 		response.getWriter().write(this.mapper.writeValueAsString(HttpServletResponse.SC_FORBIDDEN));
 
 	}
+
 }

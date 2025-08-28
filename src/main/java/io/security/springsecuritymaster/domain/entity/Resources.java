@@ -18,6 +18,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 public class Resources implements Serializable {
+
     @Id
     @GeneratedValue
     @Column(name = "resource_id")

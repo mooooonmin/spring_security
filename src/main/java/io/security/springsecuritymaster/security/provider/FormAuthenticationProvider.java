@@ -33,6 +33,7 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
         }
 
         String secretKey = ((FormWebAuthenticationDetails) authentication.getDetails()).getSecretKey();
+
         if (secretKey == null || !secretKey.equals("secret")) {
             throw new SecretException("Invalid Secret");
         }
@@ -44,4 +45,5 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return authentication.isAssignableFrom(UsernamePasswordAuthenticationToken.class);
     }
+
 }

@@ -36,4 +36,5 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return authentication.isAssignableFrom(RestAuthenticationToken.class);
     }
+
 }

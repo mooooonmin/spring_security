@@ -17,18 +17,23 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
+
     private boolean alreadySetup = false;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+
     @Override
     @Transactional
     public void onApplicationEvent(final ContextRefreshedEvent event) {
+
         if (alreadySetup) {
             return;
         }
+
         setupData();
         alreadySetup = true;
+
     }
 
     private void setupData() {
@@ -39,6 +44,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     public Role createRoleIfNotFound(String roleName, String roleDesc) {
+
         Role role = roleRepository.findByRoleName(roleName);
 
         if (role == null) {
@@ -47,10 +53,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                     .roleDesc(roleDesc)
                     .build();
         }
+
         return roleRepository.save(role);
     }
 
-    public void createUserIfNotFound(final String userName, final String email, final String password, Set<Role> roleSet) {
+    public void createUserIfNotFound(final String userName,
+                                     final String email,
+                                     final String password, Set<Role> roleSet) {
+
         Account account = userRepository.findByUsername(userName);
 
         if (account == null) {
@@ -60,6 +70,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                     .userRoles(roleSet)
                     .build();
         }
+
         userRepository.save(account);
     }
+
 }

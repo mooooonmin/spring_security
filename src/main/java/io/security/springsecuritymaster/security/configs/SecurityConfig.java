@@ -32,6 +32,7 @@ public class SecurityConfig {
     private final RestAuthenticationSuccessHandler restSuccessHandler;
     private final RestAuthenticationFailureHandler restFailureHandler;
     private final AuthorizationManager<RequestAuthorizationContext> authorizationManager;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -47,19 +48,21 @@ public class SecurityConfig {
                         .permitAll())
                 .authenticationProvider(authenticationProvider)
                 .exceptionHandling(exception -> exception
-                        .accessDeniedHandler(new FormAccessDeniedHandler("/denied"))
-                )
-        ;
+                        .accessDeniedHandler(new FormAccessDeniedHandler("/denied")));
+
         return http.build();
     }
 
+    /**
+     * 비동기 인증 관련 필터
+     */
     @Bean
     @Order(1)
     public SecurityFilterChain restSecurityFilterChain(HttpSecurity http) throws Exception {
 
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(restAuthenticationProvider);
-        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();            // build() 는 최초 한번 만 호출해야 한다
+        AuthenticationManager authenticationManager = authenticationManagerBuilder.build(); // build() 는 최초 한번 만 호출해야 한다
 
         http
                 .securityMatcher("/api/**")
@@ -70,18 +73,18 @@ public class SecurityConfig {
                         .requestMatchers("/api/manager").hasAuthority("ROLE_MANAGER")
                         .requestMatchers("/api/admin").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated())
-//                .csrf(AbstractHttpConfigurer::disable)
+                //.csrf(AbstractHttpConfigurer::disable)
                 .authenticationManager(authenticationManager)
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(new RestAuthenticationEntryPoint())
-                        .accessDeniedHandler(new RestAccessDeniedHandler()))
-                .with(new RestApiDsl<>(), restDsl -> restDsl
+                        .authenticationEntryPoint(new RestAuthenticationEntryPoint()) // 인증을 받지 않은 상태에서 접근을 거부 당했을 때(401)
+                        .accessDeniedHandler(new RestAccessDeniedHandler())) //  인증을 받은 상태에서 접근을 거부 당했을 때(403)
+                .with(new RestApiDsl<>(), restDsl -> restDsl // Dsl 설정
                                             .restSuccessHandler(restSuccessHandler)
                                             .restFailureHandler(restFailureHandler)
                                             .loginPage("/api/login")
-                                            .loginProcessingUrl("/api/login"))
-        ;
+                                            .loginProcessingUrl("/api/login"));
 
         return http.build();
     }
+
 }

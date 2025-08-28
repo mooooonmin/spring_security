@@ -15,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Account implements Serializable {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -33,5 +34,6 @@ public class Account implements Serializable {
             @JoinColumn(name = "role_id") })
     @ToString.Exclude
     private Set<Role> userRoles = new HashSet<>();
+
 }
 

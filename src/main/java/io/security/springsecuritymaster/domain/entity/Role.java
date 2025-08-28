@@ -16,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Role implements Serializable {
+
     @Id
     @GeneratedValue
     @Column(name = "role_id")
@@ -34,7 +35,7 @@ public class Role implements Serializable {
     @OrderBy("orderNum desc")
     private Set<Resources> resourcesSet = new LinkedHashSet<>();
 
-
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "userRoles", cascade = CascadeType.ALL)
     private Set<Account> accounts = new HashSet<>();
+
 }

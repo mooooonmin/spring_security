@@ -22,29 +22,37 @@ public class RestApiDsl <H extends HttpSecurityBuilder<H>> extends
     public RestApiDsl(){
         super(new RestAuthenticationFilter(),null);
     }
+
     @Override
     public void init(H http) throws Exception {
         super.init(http);
     }
+
     @Override
     public void configure(H http) {
 
         AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+
         getAuthenticationFilter().setAuthenticationManager(authenticationManager);
         getAuthenticationFilter().setAuthenticationSuccessHandler(successHandler);
         getAuthenticationFilter().setAuthenticationFailureHandler(failureHandler);
         getAuthenticationFilter().setSecurityContextRepository(getAuthenticationFilter().getSecurityContextRepository((HttpSecurity) http));
 
         SessionAuthenticationStrategy sessionAuthenticationStrategy = http.getSharedObject(SessionAuthenticationStrategy.class);
+
         if (sessionAuthenticationStrategy != null) {
             getAuthenticationFilter().setSessionAuthenticationStrategy(sessionAuthenticationStrategy);
         }
+
         RememberMeServices rememberMeServices = http.getSharedObject(RememberMeServices.class);
+
         if (rememberMeServices != null) {
             getAuthenticationFilter().setRememberMeServices(rememberMeServices);
         }
+
         http.setSharedObject(RestAuthenticationFilter.class,getAuthenticationFilter());
         http.addFilterBefore(getAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
     }
 
     public RestApiDsl<H> restSuccessHandler(AuthenticationSuccessHandler successHandler) {

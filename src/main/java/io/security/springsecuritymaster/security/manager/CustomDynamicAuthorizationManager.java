@@ -31,8 +31,9 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class CustomDynamicAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
+
     List<RequestMatcherEntry<AuthorizationManager<RequestAuthorizationContext>>> mappings;
-//    private static final AuthorizationDecision DENY = new AuthorizationDecision(false);
+    //private static final AuthorizationDecision DENY = new AuthorizationDecision(false);
     private static final AuthorizationDecision ACCESS = new AuthorizationDecision(true);
     private final HandlerMappingIntrospector handlerMappingIntrospector;
     private final ResourcesRepository resourcesRepository;
@@ -53,6 +54,7 @@ public class CustomDynamicAuthorizationManager implements AuthorizationManager<R
                         customAuthorizationManager(entry.getValue())))
                 .collect(Collectors.toList());
     }
+
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext request) {
 
@@ -66,7 +68,9 @@ public class CustomDynamicAuthorizationManager implements AuthorizationManager<R
                 return manager.check(authentication,
                         new RequestAuthorizationContext(request.getRequest(), matchResult.getVariables()));
             }
+
         }
+
         return ACCESS;
     }
 
@@ -76,17 +80,19 @@ public class CustomDynamicAuthorizationManager implements AuthorizationManager<R
     }
 
     private AuthorizationManager<RequestAuthorizationContext> customAuthorizationManager(String role) {
+
         if (role.startsWith("ROLE")) {
             AuthorityAuthorizationManager<RequestAuthorizationContext> authorizationManager = AuthorityAuthorizationManager.hasAuthority(role);
             authorizationManager.setRoleHierarchy(roleHierarchy);
             return authorizationManager;
-        }else{
+        } else{
             DefaultHttpSecurityExpressionHandler handler = new DefaultHttpSecurityExpressionHandler();
             handler.setRoleHierarchy(roleHierarchy);
             WebExpressionAuthorizationManager authorizationManager = new WebExpressionAuthorizationManager(role);
             authorizationManager.setExpressionHandler(handler);
             return authorizationManager;
         }
+
     }
 
     public synchronized void reload() {
@@ -97,4 +103,5 @@ public class CustomDynamicAuthorizationManager implements AuthorizationManager<R
                         customAuthorizationManager(entry.getValue())))
                 .collect(Collectors.toList());
     }
+
 }

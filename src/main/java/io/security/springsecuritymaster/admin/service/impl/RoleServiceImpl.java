@@ -41,4 +41,5 @@ public class RoleServiceImpl implements RoleService {
     public void deleteRole(long id) {
         roleRepository.deleteById(id);
     }
+
 }

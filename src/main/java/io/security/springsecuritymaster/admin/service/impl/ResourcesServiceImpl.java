@@ -41,4 +41,5 @@ public class ResourcesServiceImpl implements ResourcesService {
         resourcesRepository.deleteById(id);
         authorizationManager.reload();
     }
+
 }

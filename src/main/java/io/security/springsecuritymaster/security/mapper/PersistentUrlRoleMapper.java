@@ -14,15 +14,19 @@ public class PersistentUrlRoleMapper implements UrlRoleMapper{
     public PersistentUrlRoleMapper(ResourcesRepository resourcesRepository) {
         this.resourcesRepository = resourcesRepository;
     }
+
     @Override
     public Map<String, String> getUrlRoleMappings() {
 
         List<Resources> resourcesList = resourcesRepository.findAllResources();
+
         resourcesList.forEach(re -> {
             re.getRoleSet().forEach(role -> {
                 urlRoleMappings.put(re.getResourceName(), role.getRoleName());
             });
         });
+
         return urlRoleMappings;
     }
+
 }

@@ -17,6 +17,7 @@ import java.util.Set;
 @Setter
 @Builder
 public class RoleHierarchy implements Serializable {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -30,4 +31,5 @@ public class RoleHierarchy implements Serializable {
 
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private Set<RoleHierarchy> children = new HashSet<>();
+
 }

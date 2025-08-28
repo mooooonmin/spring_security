@@ -30,6 +30,7 @@ public class UserManagementServiceImpl implements UserManagementService {
     @Transactional
     @Override
     public void modifyUser(AccountDto accountDto){
+
         ModelMapper modelMapper = new ModelMapper();
         Account account = modelMapper.map(accountDto, Account.class);
 
@@ -41,12 +42,14 @@ public class UserManagementServiceImpl implements UserManagementService {
             });
             account.setUserRoles(roles);
         }
+
         account.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         userManagementRepository.save(account);
     }
 
     @Transactional
     public AccountDto getUser(Long id) {
+
         Account account = userManagementRepository.findById(id).orElse(new Account());
         ModelMapper modelMapper = new ModelMapper();
         AccountDto accountDto = modelMapper.map(account, AccountDto.class);
@@ -57,6 +60,7 @@ public class UserManagementServiceImpl implements UserManagementService {
                 .collect(Collectors.toList());
 
         accountDto.setRoles(roles);
+
         return accountDto;
     }
 
