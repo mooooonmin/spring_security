@@ -2,7 +2,6 @@ package io.security.springsecuritymaster.security.configs;
 
 import io.security.springsecuritymaster.security.dsl.RestApiDsl;
 import io.security.springsecuritymaster.security.entrypoint.RestAuthenticationEntryPoint;
-import io.security.springsecuritymaster.security.filters.CustomAuthorizationFilter;
 import io.security.springsecuritymaster.security.handler.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 @EnableWebSecurity
@@ -32,15 +31,13 @@ public class SecurityConfig {
     private final FormAuthenticationFailureHandler failureHandler;
     private final RestAuthenticationSuccessHandler restSuccessHandler;
     private final RestAuthenticationFailureHandler restFailureHandler;
-//    private final AuthorizationManager<RequestAuthorizationContext> authorizationManager;
-    private final AuthorizationManager<HttpServletRequest> authorizationManager;
+    private final AuthorizationManager<RequestAuthorizationContext> authorizationManager;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
                 .authorizeHttpRequests(auth -> auth
-//                        .anyRequest().access(authorizationManager))
-                        .anyRequest().permitAll())
+                        .anyRequest().access(authorizationManager))
 
                 .formLogin(form -> form
                         .loginPage("/login")
@@ -52,15 +49,10 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception
                         .accessDeniedHandler(new FormAccessDeniedHandler("/denied"))
                 )
-                .addFilterAfter(customAuthorizationFilter(null), ExceptionTranslationFilter.class)
         ;
         return http.build();
     }
 
-    @Bean
-    public CustomAuthorizationFilter customAuthorizationFilter(HttpSecurity http){
-        return new CustomAuthorizationFilter(authorizationManager);
-    }
 
     @Bean
     @Order(1)
