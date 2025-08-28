@@ -15,14 +15,11 @@ import java.io.IOException;
 
 @Component
 public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-
     private final RequestCache requestCache = new HttpSessionRequestCache();
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Override
-    public void onAuthenticationSuccess(final HttpServletRequest request,
-                                        final HttpServletResponse response,
-                                        final Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) throws IOException {
 
         setDefaultTargetUrl("/");
 
@@ -31,10 +28,9 @@ public class FormAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         if(savedRequest!=null) {
             String targetUrl = savedRequest.getRedirectUrl();
             redirectStrategy.sendRedirect(request, response, targetUrl);
-        } else {
+        }
+        else {
             redirectStrategy.sendRedirect(request, response, getDefaultTargetUrl());
         }
-
     }
-
 }
